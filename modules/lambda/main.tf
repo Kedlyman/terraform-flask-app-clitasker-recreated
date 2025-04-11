@@ -47,7 +47,7 @@ resource "aws_iam_role_policy_attachment" "lambda_attachment" {
 }
 
 resource "aws_lambda_function" "daily_summary" {
-  filename         = "${path.module}/lambda.zip"
+  filename         = "${path.module}/handler.zip"
   function_name    = "${var.project_name}-daily-summary"
   role             = aws_iam_role.lambda_role.arn
   handler          = "handler.lambda_handler"
