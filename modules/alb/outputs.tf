@@ -7,3 +7,8 @@ output "lb_dimension" {
   description = "CloudWatch dimension value for the LoadBalancer"
   value       = aws_lb.alb.id
 }
+
+output "tg_arn" {
+  description = "Target group ARN for the ALB"
+  value       = aws_lb_target_group.app_tg.arn
+}
