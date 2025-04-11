@@ -19,7 +19,7 @@ variable "db_instance_class" {
 }
 
 variable "db_engine_version" {
-  default = "15.3"
+  default = "17.2"
 }
 
 variable "allocated_storage" {
