@@ -59,7 +59,7 @@ module "iam" {
 module "ec2" {
   source               = "./modules/ec2"
   key_name             = "aws-cli-project-key"
-  public_key_path      = "~/.ssh/aws-cli-project-key.pub"
+  public_key_path      = "/home/cloudshell-user/.ssh/aws-cli-project-key.pub"
   instance_name        = "terraform-flask-app-ec2"
   subnet_id            = module.vpc.public_subnet_ids[0]
   security_group_id    = module.security_groups.ec2_sg_id
