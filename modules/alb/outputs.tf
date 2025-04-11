@@ -10,5 +10,5 @@ output "lb_dimension" {
 
 output "tg_arn" {
   description = "Target group ARN for the ALB"
-  value       = aws_lb_target_group.app_tg.arn
+  value       = aws_lb_target_group.tg.arn
 }
