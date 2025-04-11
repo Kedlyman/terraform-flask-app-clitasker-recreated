@@ -15,7 +15,7 @@ data "http" "my_ip" {
 }
 
 locals {
-  my_ip_cidr = "${chomp(data.http.my_ip.body)}/32"
+  my_ip_cidr = "${chomp(data.http.my_ip.response_body)}/32"
 }
 
 data "aws_secretsmanager_secret_version" "db" {
