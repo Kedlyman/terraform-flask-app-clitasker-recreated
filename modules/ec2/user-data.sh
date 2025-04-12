@@ -37,7 +37,7 @@ pip install flask psycopg2-binary boto3
 echo "Cloning application repo..."
 cd /home/ubuntu
 
-if ! git clone https://github.com/Kedlyman/clitasker-aws-fullstack.git app; then
+if ! git clone https://github.com/Kedlyman/terraform-flask-app-clitasker-recreated.git app; then
   echo "Failed to clone Flask app repo. Aborting."
   exit 1
 fi
@@ -49,7 +49,7 @@ cd app
 # ─────────────────────────────────────────────
 echo "Fetching secrets from Secrets Manager..."
 SECRET_JSON=$(aws secretsmanager get-secret-value \
-  --secret-id aws-cli-project-db-password \
+  --secret-id aws-cli-project-db-password-2 \
   --query SecretString \
   --output text \
   --region eu-central-1)
@@ -67,7 +67,7 @@ fi
 # ─────────────────────────────────────────────
 echo "Fetching RDS endpoint..."
 export DB_HOST=$(aws rds describe-db-instances \
-  --db-instance-identifier aws-cli-project-db \
+  --db-instance-identifier terraform-flask-app-db \
   --query "DBInstances[0].Endpoint.Address" \
   --output text \
   --region eu-central-1)
@@ -79,7 +79,7 @@ export DB_NAME="postgres"
 # ─────────────────────────────────────────────
 echo "Finding S3 bucket..."
 export S3_BUCKET=$(aws s3api list-buckets \
-  --query "Buckets[?starts_with(Name, 'aws-cli-project-bucket')].Name | [0]" \
+  --query "Buckets[?starts_with(Name, 'terraform-flask-app-bucket')].Name | [0]" \
   --output text)
 
 if [[ "$S3_BUCKET" == "None" || -z "$S3_BUCKET" ]]; then
@@ -95,12 +95,12 @@ echo "Starting Flask app..."
 export FLASK_APP=app.app:app 
 export FLASK_RUN_PORT=80   
 
-nohup /home/ubuntu/venv/bin/flask run --host=0.0.0.0 --port=$FLASK_RUN_PORT > /var/log/clitasker-flask.log 2>&1 &
+nohup /home/ubuntu/venv/bin/flask run --host=0.0.0.0 --port=$FLASK_RUN_PORT > /var/log/terraform-flask-app.log 2>&1 &
 
 sleep 5
 
 if curl -fs http://localhost:$FLASK_RUN_PORT >/dev/null; then
   echo "Flask app is running!"
 else
-  echo "Flask app may not have started properly. Check the logs at /var/log/clitasker-flask.log"
+  echo "Flask app may not have started properly. Check the logs at /var/log/terraform-flask-app.log"
 fi
