@@ -15,7 +15,7 @@ S3_BUCKET = os.environ.get("S3_BUCKET")
 
 @app.route("/")
 def home():
-    return "Hello from Flask running on EC2 behind ALB!"
+    return "Hello from Flask app from Kedlyman -> builded on Terraform!"
 
 @app.route("/db")
 def db_check():
