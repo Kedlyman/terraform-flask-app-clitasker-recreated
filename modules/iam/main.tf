@@ -65,7 +65,7 @@ resource "aws_iam_policy" "ec2_policy" {
         Action = [
           "secretsmanager:GetSecretValue"
         ]
-        Resource = "arn:aws:secretsmanager:${var.aws_region}:*:secret:${var.secret_name}*"
+        Resource = "arn:aws:secretsmanager:eu-central-1:864899865351:secret:aws-cli-project-db-password-2-*"
       }
     ]
   })
