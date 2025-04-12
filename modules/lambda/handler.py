@@ -8,7 +8,7 @@ def lambda_handler(event, context):
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y-%m-%d %H:%M:%S UTC")
 
-    print(f"Daily CLITasker Lambda ran at {timestamp}")
+    print(f"Daily Terraform Flask App Lambda ran at {timestamp}")
 
     bucket_name = os.environ.get("S3_BUCKET")
     if not bucket_name:
@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     key = f"{prefix}/{now.strftime('%Y-%m-%d')}.json"
 
     content = {
-        "summary": "CLITasker daily Lambda task ran successfully.",
+        "summary": "Terraform Flask App daily Lambda task ran successfully.",
         "timestamp": timestamp
     }
 
