@@ -63,14 +63,39 @@ if [[ -z "$DB_USER" || -z "$DB_PASS" ]]; then
 fi
 
 # ─────────────────────────────────────────────
-# Fetch RDS Endpoint
+# Fetch RDS Endpoint with Retrz and Validation
 # ─────────────────────────────────────────────
-echo "Fetching RDS endpoint..."
-export DB_HOST=$(aws rds describe-db-instances \
-  --db-instance-identifier terraform-flask-app-db \
-  --query "DBInstances[0].Endpoint.Address" \
-  --output text \
-  --region eu-central-1)
+echo "Waiting for RDS to become available and endpoint to be ready..."
+
+for i in {1..20}; do
+  RDS_STATE=$(aws rds describe-db-instances \
+    --db-instance-identifier terraform-flask-app-db \
+    --query "DBInstances[0].DBInstanceStatus" \
+    --output text \
+    --region eu-central-1 || echo "not-found")
+
+  if [[ "$RDS_STATE" == "available" ]]; then
+    DB_HOST=$(aws rds describe-db-instances \
+      --db-instance-identifier terraform-flask-app-db \
+      --query "DBInstances[0].Endpoint.Address" \
+      --output text \
+      --region eu-central-1)
+
+    if [[ -n "$DB_HOST" && "$DB_HOST" != "None" ]]; then
+      export DB_HOST
+      echo "RDS is ready. Host: $DB_HOST"
+      break
+    fi
+  fi
+
+  echo "Attempt $i/20: RDS status = '$RDS_STATE'. Retrying in 15s..."
+  sleep 15
+done
+
+if [[ -z "$DB_HOST" || "$DB_HOST" == "None" ]]; then
+  echo "Failed to retrieve DB endpoint after multiple attempts. Aborting."
+  exit 1
+fi
 
 export DB_NAME="postgres"
 
