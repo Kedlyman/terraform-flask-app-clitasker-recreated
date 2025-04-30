@@ -15,7 +15,7 @@ jobs:
       PYTHON_VERSION: '3.13'
 
     steps:
-      - name: ⬇Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
