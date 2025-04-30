@@ -39,8 +39,8 @@ module "rds" {
   private_subnet_ids = module.vpc.private_subnet_ids
   rds_sg_id          = module.security_groups.rds_sg_id
 
-  db_username        = local.db_secret.username
-  db_password        = local.db_secret.password
+  db_username = local.db_secret.username
+  db_password = local.db_secret.password
 }
 
 module "s3" {
@@ -57,12 +57,12 @@ module "iam" {
 }
 
 module "ec2" {
-  source               = "./modules/ec2"
-  key_name             = "aws-terraform-project-key"
-  public_key_path      = "/home/cloudshell-user/.ssh/aws-terraform-project-key.pub"
-  instance_name        = "terraform-flask-app-ec2"
-  subnet_id            = module.vpc.public_subnet_ids[0]
-  security_group_id    = module.security_groups.ec2_sg_id
+  source                = "./modules/ec2"
+  key_name              = "aws-terraform-project-key"
+  public_key_path       = "/home/cloudshell-user/.ssh/aws-terraform-project-key.pub"
+  instance_name         = "terraform-flask-app-ec2"
+  subnet_id             = module.vpc.public_subnet_ids[0]
+  security_group_id     = module.security_groups.ec2_sg_id
   instance_profile_name = module.iam.instance_profile_name
 }
 
@@ -81,9 +81,9 @@ module "lambda" {
 }
 
 module "monitoring" {
-  source            = "./modules/monitoring"
-  project_name      = "terraform-flask-app"
-  ec2_instance_id   = module.ec2.instance_id
-  tg_arn            = module.alb.tg_arn       
-  lb_dimension      = module.alb.lb_dimension
+  source          = "./modules/monitoring"
+  project_name    = "terraform-flask-app"
+  ec2_instance_id = module.ec2.instance_id
+  tg_arn          = module.alb.tg_arn
+  lb_dimension    = module.alb.lb_dimension
 }

@@ -5,5 +5,5 @@ output "rds_endpoint" {
 
 output "rds_id" {
   description = "The RDS PostrgreSQL id"
-  value = aws_db_instance.postgres.id
+  value       = aws_db_instance.postgres.id
 }

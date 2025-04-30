@@ -47,17 +47,17 @@ resource "aws_iam_role_policy_attachment" "lambda_attachment" {
 }
 
 resource "aws_lambda_function" "daily_summary" {
-  filename         = "${path.module}/handler.zip"
-  function_name    = "${var.project_name}-daily-summary"
-  role             = aws_iam_role.lambda_role.arn
-  handler          = "handler.lambda_handler"
-  runtime          = "python3.13"
-  timeout          = 10
+  filename      = "${path.module}/handler.zip"
+  function_name = "${var.project_name}-daily-summary"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "handler.lambda_handler"
+  runtime       = "python3.13"
+  timeout       = 10
 
   environment {
     variables = {
-    S3_BUCKET        = var.bucket_name
-    SUMMARY_PREFIX   = "daily-summary"
+      S3_BUCKET      = var.bucket_name
+      SUMMARY_PREFIX = "daily-summary"
     }
   }
 

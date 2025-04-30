@@ -9,7 +9,7 @@ variable "bucket_name" {
 }
 
 variable "secret_name" {
-  default = "aws-cli-project-db-password-2"
+  default     = "aws-cli-project-db-password-2"
   description = "The name or prefix of the Secrets Manager secret that EC2 instances can read"
   type        = string
 }
