@@ -1,0 +1,49 @@
+name: Deploy Flask App to EC2
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'app/**'
+      - 'requirements.txt'
+      - '.github/workflows/deploy-app.yml'
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    env:
+      EC2_HOST: ${{ secrets.EC2_HOST }}
+      SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+      SSH_USER: ubuntu
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          echo "$SSH_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: Deploy Flask App to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $SSH_USER@$EC2_HOST << 'EOF'
+            set -euxo pipefail
+
+            # Navigate to repo directory
+            cd /home/ubuntu/terraform-flask-app-clitasker-recreated
+
+            echo "Pulling latest changes..."
+            git pull origin main
+
+            echo "Activating virtualenv and reinstalling requirements..."
+            source /home/ubuntu/venv/bin/activate
+            pip install -r app/requirements.txt
+
+            echo "Restarting Flask app..."
+            pkill flask || true
+            nohup flask run --host=0.0.0.0 --port=80 > /var/log/terraform-flask-app.log 2>&1 &
+          EOF
+
