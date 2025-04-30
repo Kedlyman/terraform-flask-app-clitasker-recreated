@@ -32,18 +32,22 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem $SSH_USER@$EC2_HOST << 'EOF'
             set -euxo pipefail
 
-            # Navigate to repo directory
             cd /home/ubuntu/terraform-flask-app-clitasker-recreated
 
             echo "Pulling latest changes..."
             git pull origin main
 
-            echo "Activating virtualenv and reinstalling requirements..."
-            source /home/ubuntu/venv/bin/activate
+            echo "Setting up virtualenv..."
+            python3 -m venv venv
+            source venv/bin/activate
+
+            echo "Installing requirements..."
+            pip install --upgrade pip
             pip install -r app/requirements.txt
 
             echo "Restarting Flask app..."
             pkill flask || true
             nohup flask run --host=0.0.0.0 --port=80 > /var/log/terraform-flask-app.log 2>&1 &
           EOF
+
 
