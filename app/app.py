@@ -13,9 +13,11 @@ DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME", "postgres")
 S3_BUCKET = os.environ.get("S3_BUCKET")
 
+
 @app.route("/")
 def home():
     return "Hello from Flask app from Kedlyman -> builded on Terraform!"
+
 
 @app.route("/db")
 def db_check():
@@ -24,10 +26,7 @@ def db_check():
 
     try:
         conn = psycopg2.connect(
-            host=DB_HOST,
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASS
+            host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS
         )
         cur = conn.cursor()
         cur.execute("SELECT version();")
@@ -37,6 +36,7 @@ def db_check():
         return f"Connected to PostgreSQL DB! Version: {version[0]}"
     except Exception as e:
         return f"Failed to connect to DB: {str(e)}"
+
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
@@ -49,7 +49,7 @@ def upload_file():
             return "S3 bucket not configured."
 
         # Optional: Validate file type & size
-        allowed_extensions = ('.txt', '.pdf', '.jpg', '.png')
+        allowed_extensions = (".txt", ".pdf", ".jpg", ".png")
         if not file.filename.endswith(allowed_extensions):
             return "File type not allowed."
 
