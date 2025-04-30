@@ -36,6 +36,10 @@ jobs:
 
             echo "Pulling latest changes..."
             git pull origin main
+            
+            echo "Instalin venv if missing..."
+            sudo apt update
+            sudo apt install -y python3.12-venv
 
             echo "Setting up virtualenv..."
             python3 -m venv venv
