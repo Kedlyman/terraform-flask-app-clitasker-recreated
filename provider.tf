@@ -14,7 +14,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "CLITasker"
+      Project     = "terraform-flask-app"
       Environment = "Dev"
       ManagedBy   = "Terraform"
     }
