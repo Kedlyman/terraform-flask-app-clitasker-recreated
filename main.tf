@@ -2,7 +2,7 @@ module "vpc" {
   source = "./modules/vpc"
 
   aws_region            = var.aws_region
-  project_name          = "terraform-flask-app"
+  project_name          = var.project_name
 }
 
 data "http" "my_ip" {
@@ -24,13 +24,13 @@ locals {
 module "security_groups" {
   source       = "./modules/security_groups"
   vpc_id       = module.vpc.vpc_id
-  project_name = "terraform-flask-app"
+  project_name = var.project_name
   my_ip_cidr   = local.my_ip_cidr
 }
 
 module "rds" {
   source             = "./modules/rds"
-  project_name       = "terraform-flask-app"
+  project_name       = var.project_name
   private_subnet_ids = module.vpc.private_subnet_ids
   rds_sg_id          = module.security_groups.rds_sg_id
 
@@ -40,12 +40,12 @@ module "rds" {
 
 module "s3" {
   source       = "./modules/s3"
-  project_name = "terraform-flask-app"
+  project_name = var.project_name
 }
 
 module "iam" {
   source       = "./modules/iam"
-  project_name = "terraform-flask-app"
+  project_name = var.project_name
   bucket_name  = module.s3.bucket_name
   secret_name  = "aws-cli-project-db-password-2"
   aws_region   = var.aws_region
@@ -63,7 +63,7 @@ module "ec2" {
 
 module "alb" {
   source            = "./modules/alb"
-  project_name      = "terraform-flask-app"
+  project_name      = var.project_name
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
   ec2_instance_id   = module.ec2.instance_id
@@ -71,13 +71,13 @@ module "alb" {
 
 module "lambda" {
   source       = "./modules/lambda"
-  project_name = "terraform-flask-app"
+  project_name = var.project_name
   bucket_name  = module.s3.bucket_name
 }
 
 module "monitoring" {
   source          = "./modules/monitoring"
-  project_name    = "terraform-flask-app"
+  project_name    = var.project_name
   ec2_instance_id = module.ec2.instance_id
   tg_arn          = module.alb.tg_arn
   lb_dimension    = module.alb.lb_dimension
