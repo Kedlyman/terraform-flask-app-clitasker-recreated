@@ -24,7 +24,7 @@ jobs:
       - name: Setup SSH
         run: |
           echo "$SSH_KEY" > private_key.pem
-          chmod 600 private_key.pem
+          chmod 400 private_key.pem
 
       - name: Deploy Flask App to EC2
         run: |
@@ -36,7 +36,7 @@ jobs:
             echo "Pulling latest changes..."
             git pull origin main
             
-            echo "Instalin venv if missing..."
+            echo "Installing venv if missing..."
             sudo apt update
             sudo apt install -y python3.13-venv
 
