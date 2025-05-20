@@ -8,6 +8,7 @@ on:
 
 jobs:
   terraform-plan:
+    name: Plan Terraform Resources
     runs-on: ubuntu-latest
 
     env:
